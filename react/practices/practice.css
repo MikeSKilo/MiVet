@@ -1,0 +1,97 @@
+
+
+.practice-card-img-top {
+
+    object-fit: cover;
+    height: 300px;
+
+}
+
+.practice-card {
+    object-fit: cover;
+    height: 600px;
+    
+    overflow-y: auto;
+}
+.practice-card-body{
+    padding: .75rem;
+}
+
+.pratice-card-footer{
+    padding: .75rem
+}
+.practice-btn {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    color: #5c5776;
+    cursor: pointer;
+    display: inline-block;
+    font-size: .875rem;
+    font-weight: 600;
+    line-height: 1.6;
+    padding: 0.75rem 1.25rem;
+    text-align: center;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+}
+
+.practice-btn-primary {
+    background-color: #754ffe;
+    border-color: #754ffe;
+    color: #fff;
+}
+
+.single-practice-img {
+    background-Repeat: 'no-repeat';
+    background-Size: 'cover';
+    background-Position: 'top center';
+}
+.practice-btn-custom {
+    --bs-btn-font-size: .3rem;
+    
+}
+.practice-form{
+    height: auto;
+}
+.practice-form-control {
+    appearance: none;
+        background-clip: padding-box;
+        background-color: #fff;
+        border: 1px solid #e8e7ed;
+        border-radius: 0.25rem;
+        color: #18113c;
+        display: block;
+        font-size: .875rem;
+        font-weight: 400;
+        line-height: 1.6;
+        padding: 0.75rem 1.25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        width: 100%;
+}
+.practice-form-select {
+    appearance: none;
+        background-color: #fff;
+        background-position: right 1.25rem center;
+        background-repeat: no-repeat;
+        background-size: 16px 12px;
+        border: 1px solid #e8e7ed;
+        border-radius: 0.25rem;
+        color: #a8a3b9;
+        display: block;
+        font-size: .875rem;
+        font-weight: 400;
+        line-height: 1.6;
+        padding: 0.75rem 3.75rem 0.75rem 1.25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        width: 100%;
+}
+
+.practice-img-uploaded {
+        display: block;
+        width: auto;
+        height: 100px;
+}
