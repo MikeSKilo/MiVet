@@ -5,11 +5,10 @@ import sabioDebug from "sabio-debug";
 import VetDashboardTable from "./VetDashboardTable";
 import {getByVetIdByMonth} from "services/appointmentService"
 import VetClientsCard from "./VetClientsCard";
-import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types"
 
-
-function VetClients() {
+function VetClients({vetId}) {
     const _logger = sabioDebug.extend("VetDashboard-clients");
     const [vetClients , setVetClients] = useState({
 		list: [],
@@ -17,10 +16,10 @@ function VetClients() {
     });
     const [listType, setListType] = useState('card');
     _logger(vetClients);
-    const { id } = useParams();
+    
     useEffect(() => {
         
-		getByVetIdByMonth(id , 6)
+		getByVetIdByMonth(vetId , 6)
 			.then(vetProfileSuccess)
 			.catch(vetProfileError)
 	
@@ -117,3 +116,7 @@ function VetClients() {
 }
 
 export default VetClients;
+
+VetClients.propTypes = {
+    vetId : PropTypes.number.isRequired
+}

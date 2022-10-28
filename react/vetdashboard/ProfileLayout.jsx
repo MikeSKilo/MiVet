@@ -95,7 +95,7 @@ const ProfileLayout = (props) => {
                                         <Nav.Item className="navbar-header mt-4" as="li">
                                             ACCOUNT SETTINGS
                                         </Nav.Item>
-                                        {AccountSettingsMenu.map(accountSettingMapper)}
+                                        {AccountSettingsMenu(vetProfile.id).map(accountSettingMapper)}
                                     </Nav>
                                 </Navbar.Collapse>
                             </Navbar>

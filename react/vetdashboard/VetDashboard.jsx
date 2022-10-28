@@ -1,5 +1,4 @@
 import React, { useEffect, useState} from "react";
-import { useParams, useLocation } from 'react-router-dom';
 import ProfileLayout from "./ProfileLayout";
 import sabioDebug from "sabio-debug";
 import PropTypes from "prop-types";
@@ -12,20 +11,13 @@ import { toast } from "react-toastify";
 
 
 function VetDashboard(props) {
-	const location = useLocation();	
 	const _logger = sabioDebug.extend("VetDashboard");
-	_logger("location", location);
-    const [userInfo, setUserInfo] = useState();
 	_logger("VetDashboard props", props)
-    const { id } = useParams();
     const [componentType, setComponentType] = useState();
     const [vetProfile, setVetProfile] = useState(); 
 
     useEffect(() => {
         
-        setUserInfo(props.currentUser)
-        _logger("LoggedinUser", userInfo)
-        _logger("vetID", id)
         setComponentType('main')
         vetProfilesService
                 .getByUserId(props.currentUser.id)
@@ -43,7 +35,7 @@ function VetDashboard(props) {
                 avatar: item.createdBy.userImage,
                 name: `${item.createdBy.firstName} ${item.createdBy.lastName}`,
                 email: item.businessEmail,
-                id: item.createdBy.id,
+                id: item.id,
                 verified: 1,
 				
             }
@@ -61,21 +53,26 @@ function VetDashboard(props) {
     }
     
     const renderer = (selector) => {
+        _logger("vetProfile",vetProfile)
+        if (vetProfile) {
+            
+        
         switch (selector) {
             case 'appointments':
-                return <VetAppointments vetId = {id}></VetAppointments>
+                return <VetAppointments vetId = {vetProfile.id}></VetAppointments>
                 
             case 'invoices':
-                return <VetInvoices></VetInvoices>
+                return <VetInvoices vetId = {vetProfile.id}></VetInvoices>
             
             case 'clients':
-                return <VetClients></VetClients>
+                return <VetClients vetId = {vetProfile.id}></VetClients>
             
             default:
                 return <VetDashboardMain />
             
                 
-        }
+            }
+            }
     }
 
     return (<React.Fragment>

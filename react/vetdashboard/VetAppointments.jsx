@@ -1,5 +1,5 @@
 import React, { useCallback, useState ,useEffect} from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {Card, Row, Col, Table, Modal} from 'react-bootstrap';
 import sabioDebug from "sabio-debug";
 import Swal from "sweetalert2";
@@ -13,7 +13,7 @@ import {
 } from "../../../services/appointmentService"
 import Appointment from "components/appoinments/Appointment";
 import { toast } from "react-toastify";
-
+import PropTypes from 'prop-types'
 
 const MySwal = withReactContent(
     Swal.mixin({
@@ -25,7 +25,7 @@ const MySwal = withReactContent(
     })
 );
 
-function VetAppointments() {
+function VetAppointments({ vetId }) {
     
     const navigate = useNavigate();
     const _logger = sabioDebug.extend("VetDashboard-appointments");
@@ -36,10 +36,10 @@ function VetAppointments() {
         }
     );
     const [filter, setFilter] = useState({ value:7 , type:'day'});
-   const { id } = useParams();
+   
     useEffect(() => {
        
-            getByVetId(id)
+            getByVetId(vetId)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
                 
@@ -48,6 +48,7 @@ function VetAppointments() {
 
     const onClickAptFilter = e => {
         const number = parseInt(e.target.value, 10);
+        _logger(number)
         const arrayOfTypes = [
             { value : 0, type : 'all'},
             //day
@@ -55,7 +56,7 @@ function VetAppointments() {
             
             //month
             { value: 2, type: 'month' },
-            {vlaue:6, type : 'month'}
+            {value: 6, type : 'month'}
         ]
         _logger("onClickAptFilter", e.target.value);
         const value = e.target.value
@@ -63,7 +64,7 @@ function VetAppointments() {
         
         if (number === 1) {
 
-            getByVetIdByUpcomingDay(id , arrayOfTypes[number])
+            getByVetIdByUpcomingDay(vetId , arrayOfTypes[number].value)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
             
@@ -71,7 +72,7 @@ function VetAppointments() {
         else if (number === 2)
         {
             
-            getByVetIdByMonth(id, arrayOfTypes[number])
+            getByVetIdByMonth(vetId, arrayOfTypes[number].value)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
             
@@ -79,13 +80,13 @@ function VetAppointments() {
         }
         else if (number === 3)
         {
-             getByVetIdByMonth(id, arrayOfTypes[number])
+             getByVetIdByMonth(vetId, arrayOfTypes[number].value)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
             }
         else if (number ===0)
         {
-            getByVetId(id)
+            getByVetId(vetId)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
         }
@@ -286,3 +287,7 @@ function VetAppointments() {
 }
 
 export default VetAppointments;
+
+VetAppointments.propTypes = {
+    vetId : PropTypes.number.isRequired
+}
