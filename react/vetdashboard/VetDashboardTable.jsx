@@ -70,16 +70,16 @@ function VetDashboardTable(props) {
 export default VetDashboardTable;
 
 VetDashboardTable.propTypes = {
-    type: PropTypes.string,
+    type: PropTypes.string.isRequired,
     data: PropTypes.shape({
-        appointmentStart: PropTypes.string,
-        notes: PropTypes.string,
-        location: PropTypes.shape({ lineOne: PropTypes.string }),
+        appointmentStart: PropTypes.string.isRequired,
+        notes: PropTypes.string.isRequired,
+        location: PropTypes.shape({ lineOne: PropTypes.string }).isRequired,
         client: PropTypes.shape({
-            firstName: PropTypes.string,
-            lastName: PropTypes.string,
-            id: PropTypes.number,
-            email: PropTypes.string
-        })
-    })
+            firstName: PropTypes.string.isRequired,
+            lastName: PropTypes.string.isRequired,
+            id: PropTypes.number.isRequired,
+            email: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired
 }

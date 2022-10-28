@@ -1,46 +1,13 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React from "react";
 import {Card, Row, Col, Button, } from 'react-bootstrap';
-import sabioDebug from "sabio-debug";
-import ProfileLayout from "./ProfileLayout";
 import VetDashboardTable from "./VetDashboardTable";
-import vetProfilesService from "components/vetProfiles/vetProfilesService";
 
-function VetInvoices(props) {
-    const _logger = sabioDebug.extend("VetDashboard invoices");
-    const [vetProfile , setVetProfile] = useState({
-		
-	});
-    _logger(props);
-    useEffect(() => {
-		vetProfilesService
-			.getById(7)
-			.then(vetProfileSuccess)
-			.catch(vetProfileError)
-		
-	
-	}, []);
 
-	const vetProfileSuccess = resp => {
-		_logger("vetProfileSuccess", resp);
-		setVetProfile(prevState => {
-			return {
-				...prevState,
-				avatar: resp.item.createdBy.userImage,
-				name: `${resp.item.createdBy.firstName} ${resp.item.createdBy.lastName}`,
-				email: resp.item.businessEmail,
-				
-			}
-		})
-		
-	};
-	const vetProfileError = err => {
-		_logger("vetProfileError", err);
+function VetInvoices() {
 
-	};
-
+  
     return (
-        <ProfileLayout vetProfile = {vetProfile}>
+        <React.Fragment>
             <Card className="border-0 mt-4">
                 <Card.Header>
                     <h3 className="mb-0 h4">Invoices</h3>
@@ -81,7 +48,7 @@ function VetInvoices(props) {
                 </Card>
 
             </Card>
-        </ProfileLayout>
+        </React.Fragment>
     );
 }
 

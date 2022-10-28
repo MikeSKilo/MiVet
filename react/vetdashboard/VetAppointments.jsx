@@ -1,17 +1,18 @@
 import React, { useCallback, useState ,useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {Card, Row, Col, Table, Modal} from 'react-bootstrap';
 import sabioDebug from "sabio-debug";
 import Swal from "sweetalert2";
 import { FiMoreVertical } from "react-icons/fi";
 import withReactContent from "sweetalert2-react-content";
 import { formatDateTime } from "utils/dateFormater";
-import ProfileLayout from "./ProfileLayout";
+
 import {
     deleteAppointment, getByVetId,
     getByVetIdByMonth, getByVetIdByUpcomingDay
 } from "../../../services/appointmentService"
 import Appointment from "components/appoinments/Appointment";
+import { toast } from "react-toastify";
 
 
 const MySwal = withReactContent(
@@ -24,7 +25,7 @@ const MySwal = withReactContent(
     })
 );
 
-function VetAppointments(props) {
+function VetAppointments() {
     
     const navigate = useNavigate();
     const _logger = sabioDebug.extend("VetDashboard-appointments");
@@ -34,40 +35,57 @@ function VetAppointments(props) {
             appointmentsComponents: [],
         }
     );
-    const [filter, setFilter] = useState(0);
-    _logger(props);
-
-   
+    const [filter, setFilter] = useState({ value:7 , type:'day'});
+   const { id } = useParams();
     useEffect(() => {
        
-            getByVetId(4)
+            getByVetId(id)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
+                
        
     }, []);
 
     const onClickAptFilter = e => {
-        
-        
-        _logger("onClickAptFilter", typeof e.target.value);
-        const value = parseInt(e.target.value, 10);
+        const number = parseInt(e.target.value, 10);
+        const arrayOfTypes = [
+            { value : 0, type : 'all'},
+            //day
+            { value :7 , type: 'day'},
+            
+            //month
+            { value: 2, type: 'month' },
+            {vlaue:6, type : 'month'}
+        ]
+        _logger("onClickAptFilter", e.target.value);
+        const value = e.target.value
         setFilter(value);
-        if (value === 6 || value === 2)
-        {
-            getByVetIdByMonth(4, value)
+        
+        if (number === 1) {
+
+            getByVetIdByUpcomingDay(id , arrayOfTypes[number])
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
+            
         }
-        else if (value === 7)
+        else if (number === 2)
         {
             
-            getByVetIdByUpcomingDay(4 , value)
+            getByVetIdByMonth(id, arrayOfTypes[number])
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
+            
+            
         }
-        else if (value !==0)
+        else if (number === 3)
         {
-            getByVetId(4)
+             getByVetIdByMonth(id, arrayOfTypes[number])
+                .then(getByVetIdSuccess)
+                .catch(getByVetIdError)
+            }
+        else if (number ===0)
+        {
+            getByVetId(id)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
         }
@@ -106,6 +124,7 @@ function VetAppointments(props) {
 
     const deleteAppointmentOnError = (error) => {
         _logger(error);
+        toast.warn("Error deleting the data")
     };
 
     const dropDownEvents = useCallback((btn, info) => {
@@ -185,7 +204,9 @@ function VetAppointments(props) {
 	};
 
     return (
-        <ProfileLayout >
+        <React.Fragment>
+
+        
             <Card className="border-0 ">
                 <Card.Header>
                     <h3 className="mb-0 h4">Appointments</h3>
@@ -195,9 +216,9 @@ function VetAppointments(props) {
                         <Col lg={3} md={6} className="pe-md-0 mb-2 mb-lg-0">
                             <select name className="form-select" value={filter} onChange={onClickAptFilter}>
                                 <option value={0} className="text-muted">Upcoming Appointments</option>
-                                <option value={7} className={"text-dark"} >Upcoming 7 days</option>
+                                <option value={1} className={"text-dark"} >Upcoming 7 days</option>
                                 <option value={2} className={"text-dark"} >Last 2 months</option>
-                                <option value={6} className={"text-dark"} >Last 6 months</option>
+                                <option value={3} className={"text-dark"} >Last 6 months</option>
 
                             </select>
                         </Col>
@@ -259,9 +280,9 @@ function VetAppointments(props) {
                     </button>
                 </Modal.Footer>
             </Modal>
-        </ProfileLayout>
+        </React.Fragment>
 
-    );
+    )
 }
 
 export default VetAppointments;

@@ -1,0 +1,6 @@
+
+.profile-cover-bg {
+    background: url(assets/images/background/profile-bg.jpg);
+        background-Repeat: 'no-repeat';
+            background-Size: 'cover';
+}

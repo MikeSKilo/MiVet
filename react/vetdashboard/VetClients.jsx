@@ -2,27 +2,27 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import {Card, Row, Col, Button, Table,  } from 'react-bootstrap';
 import sabioDebug from "sabio-debug";
-import ProfileLayout from "./ProfileLayout";
 import VetDashboardTable from "./VetDashboardTable";
 import {getByVetIdByMonth} from "services/appointmentService"
 import VetClientsCard from "./VetClientsCard";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
-function VetClients(props) {
+function VetClients() {
     const _logger = sabioDebug.extend("VetDashboard-clients");
     const [vetClients , setVetClients] = useState({
 		list: [],
         component: [],
     });
-    const [listType, setListType] = useState();
-    _logger(props);
+    const [listType, setListType] = useState('card');
     _logger(vetClients);
+    const { id } = useParams();
     useEffect(() => {
         
-		getByVetIdByMonth(7 , 6)
+		getByVetIdByMonth(id , 6)
 			.then(vetProfileSuccess)
 			.catch(vetProfileError)
-		
 	
 	}, []);
     const mapper = anAppointment => {
@@ -35,19 +35,15 @@ function VetClients(props) {
         return (
             <Col lg={3} mg={3} className="m-3">
                 <VetClientsCard data={anAppointment}></VetClientsCard>
-            </Col>
-
-            
+            </Col>     
         )
     }
-   
 	const vetProfileSuccess = resp => {
 		_logger("vetProfileSuccess", resp);
 		setVetClients(prevState => {
 			 const pd = { ...prevState };
             pd.list = resp.item.pagedItems;
             pd.component = resp.item.pagedItems.map(mapper);
-            //testing
             pd.component2 = resp.item.pagedItems.map(mapperV2);
             return pd;
 		})
@@ -55,32 +51,19 @@ function VetClients(props) {
 	};
 	const vetProfileError = err => {
 		_logger("vetProfileError", err);
-
+        toast.warn("error on getting profile")
     };
     const typeChange = e => {
         setListType(e.target.value);
     }
 
     return (
-        <ProfileLayout >
-            
-                
-
-            
             <Card className="border-0 mt-4">
                 <Card.Header>
                     <h3 className="mb-0 h4">Clients</h3>
                 </Card.Header>
                 <Card.Body>
                     <Row className="align-items-center">
-                        <Col lg={3} md={6} className="pe-md-0 mb-2 mb-lg-0">
-                            <select name className="form-select" defaultValue={0}>
-                                <option value={0} className="text-muted">Select Option</option>
-                                <option value={30} className={"text-dark"}>Due</option>
-                                <option value={60} className={"text-dark"}>Last 10 Invoices</option>
-                                <option value={180} className={"text-dark"}>Paid 10 Invoices</option>
-                            </select>
-                        </Col>
                         <Col lg={4} md={6} className="mb-2 mb-2 mb-lg-0">
                             <select name className="form-select" value={listType} onChange={typeChange}>
                                 <option value={''} className="text-muted">Select View Option</option>
@@ -129,7 +112,7 @@ function VetClients(props) {
                         </div>
                     </Card>)}
             </Card>
-        </ProfileLayout>
+       
     )
 }
 
