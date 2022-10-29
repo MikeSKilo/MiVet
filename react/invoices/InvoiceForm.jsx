@@ -1,96 +1,81 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
 import sabioDebug from "sabio-debug";
-import * as Yup from "yup";
-import Invoice from "./Invoice";
-import InvoiceFormInputs from "./InvoiceFormInputs";
-import InvoiceSelectors from "./InvoiceSelectors";
+import Swal from "sweetalert2";
+import {getById} from "../../services/appointmentService"
+import InvoiceFormFields from "./InvoiceFormFields";
 
+    
 function InvoiceForm() {
     const _logger = sabioDebug.extend("InvoiceForm")
-    const [formTitle] = useState("Invoice");
-    const [formData, setFormData] = useState({
-        id:0,
+    const [formTitle] = useState("Invoice #000");
+    const [initialValues] = useState({
+        id:21,
         vetId: 0,
         customerId: "",
-        currency: "",
-        description: "",
-        items:[{
+        currency: "USD",
+        notes: "",
+        services:[{
             name: "",
             price: '',
-        }]
+        }],
+       
     }
     );
-    const [isDoneAdding, setIsDoneAdding] = useState(false);
-    const showForm = () => {
-        setIsDoneAdding(false)
-    }
-   
-    
 
+    const [client, setClient] = useState();
+    useEffect(() => {
+        //get the client information to render on the invoiceform.
+        getById(4)
+            .then(getAppointmentSuccess)
+            .catch(getAppointmentError)
+        
+    },[])
+ 
+
+    const getAppointmentSuccess = resp => {
+        _logger("getAppointmentSuccess", resp)
+        setClient(resp.item.client)
+    }
+    const getAppointmentError = err => {
+        _logger("getAppointmentError", err)
+        toast.warn("Could not get the data")
+    }
     
     const onSubmitClicked = e => {
-        _logger("onSubmitClicked",e)
-        //  if (state.AddOrEdit === false) {
-        //     _service
-        //         .update(e.Id, e)
-        //         .then(submitSuccess)
-        //         .catch(submitError)
-        // }
-        // else {
-        //     _service
-        //         .create(e)
-        //         .then(submitSuccess)
-        //         .catch(submitError)
-        // };
-        
-    }
-    let invoiceSchema = {
-            // name: Yup.string().min(2).required("is required"),
-            // description: Yup.string().min(10).required("is required"),
-            // lineOne: Yup.string().min(10).required("is required"),
-            // lineTwo: Yup.string(),
-            // city: Yup.string().min(3).required("City name is required"),
-            // zip: Yup.string().min(5).required("ZipCode is required"),
-            // stateId: Yup.number().required().positive(),
-            // latitude: Yup.number().required(),
-            // longitude: Yup.number().required(),
-            // locationTypeId: Yup.number().required().positive(),
-            // phone: Yup.string().min(10).required(),
-            // fax: Yup.string().min(10).required(),
-            // businessEmail: Yup.string().email().required(),
-            // siteUrl: Yup.string().url().required(),
-            // scheduleId : Yup.number().required().positive()
-    };
-    
-     const onChangeFormData = e => {
-        const target = e.target;
-        const value = target.value;
-        const name = target.name;
-        setFormData(prevState => {
-            const pd = {
-                ...prevState
+        _logger("onSubmitClicked", e)
+        let swalHtml = `<div class='container-fluid'><p class="fw-bold">you have ${e.services.length} services</p>`
+        for (let index = 0; index < e.services.length; index++) {
+            const element = e.services[index];
+            swalHtml += `<div class='row'>
+                        <div class='col m-0 text-start'><p>Service: ${element.name}</p></div>
+                        <div class= 'col m-0 text-start'> 'Price: $${element.price}</div> </div>`
+        }
+        swalHtml += '</div>'
+        //  will add a service to insert invoice data to the table.  
+        Swal.fire({
+            title: 'Are you done adding services?',
+            html: swalHtml,
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Send',
+            denyButtonText: `Add more`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                Swal.fire('Sent!', '', 'success')
+            } else if (result.isDenied) {
+                Swal.fire('Not Sent', '', 'info')
             }
-            pd[name] = value;
-            return pd;
         })
+         
     }
-    const getItemsData = data => {
-        _logger("getItemsData", data)
-        const itemsData = data;
-        setFormData(prevState => {
-            const pd = {
-                ...prevState
-            }
-            pd.items=itemsData
-            return pd;
-        })
-        setIsDoneAdding(true);
-    }
+  
 
+    
     return (
-        <div className="container p-4">
+        <div className="container p-4 ">
             <Row>
                 <Col lg={12} md={12} sm={12}>
                     <div className="border-bottom pb-4 mb-4 d-md-flex align-items-center justify-content-between">
@@ -103,76 +88,20 @@ function InvoiceForm() {
             </Row>
             <div className="row">
                 <div className="col-2">
-                    <button className="btn btn-secondary mb-2">Go back</button>
+                    <button className="btn btn-secondary mb-2 ms-4">Go back</button>
                 </div>
             </div>
+            <InvoiceFormFields  ></InvoiceFormFields>
             <div className="row">
                 <Col className="mb-4">
-                    <Formik
-                        enableReinitialize={true}
-                        initialValues={formData}
+                    <InvoiceFormFields
+                        initialValues={initialValues}
+                        formTitle={formTitle}
                         onSubmit={onSubmitClicked}
-                        validationSchema={Yup.object().shape(
-                            invoiceSchema
-                        )}>
-                        <Form>
-                            {/* Form Title */}
-                            <div className="form-group mb-3 card practice-form">
-                                <div className="border-bottom px-4 py-3 card-header">
-                                    <h4 className="mb-0">
-                                        {formTitle}
-                                    </h4>
-                                </div>
-                                {/* invoice selectors  */}
-                                <div className="row">
-                                    <div className="col-2 ms-4">
-
-                                        <InvoiceSelectors ></InvoiceSelectors>
-                                    </div>
-                                </div>
-                                
-                                
-                                <div className="card-body">
-                                    <div className="row">
-                                        {!isDoneAdding &&
-                                            <React.Fragment>
-                                                {/* input Fields */}
-                                                <InvoiceFormInputs getItemsData={getItemsData} data={formData.items}>
-                                                    <Row >
-                                                    <div className="col mb-3">
-
-                                                        <label htmlFor="description" className="form-label">Description</label>
-                                                        <Field as="textarea" className="form-control practice-form-control" id="description" name="description" onChange={onChangeFormData}></Field>
-                                                        <ErrorMessage
-                                                            name="description"
-                                                            component="div"
-                                                            className="has-error"
-                                                        />
-                                                    </div>
-                                                </Row>
-                                                </InvoiceFormInputs>
-                                                {/* description */}
-                                                
-                                                
-                                            </React.Fragment>}
-                                        {/* show summary of the invoice when clicked done. */}
-                                        {isDoneAdding && <Invoice data={formData} showForm={showForm}></Invoice>}
-
-                                        {/* submit the data  */}
-                                        { isDoneAdding&&(<div className="col-1 m-2">
-                                            
-                                                <button type="submit" className="btn btn-primary">
-                                                    Submit
-                                                </button>
-                                        </div>)}
-                                        
-                                            
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </Form>
-                    </Formik>
+                        client={client}
+                    >
+    
+                    </InvoiceFormFields>
                 </Col>
             </div>
         </div>
