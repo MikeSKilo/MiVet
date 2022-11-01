@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { Fragment, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Row, Col, Container, Nav, Navbar } from 'react-bootstrap';
@@ -16,19 +15,20 @@ const ProfileLayout = (props) => {
     _logger("ProfileLayout props", props)
 	
     useEffect(() => {
-        _logger("useEffect activating");
+      
         setVetProfile(props.vetProfile)
     }, [props]);
     
     const menuMapper = (item, index) => {
+        _logger("menuMapper",item);
         return (
             <Nav.Item
                 as="li"
                 key={index}
-                className={`${item.link === location.pathname ? 'active' : ''
+                className={`${item.type === props.type ? 'active' : ''
                     }`}
             >
-                <Link type='button' className="nav-link" onClick={() => props.setType(item.type)}> <i className={`fe fe-${item.icon} nav-icon`}></i>{item.title} </Link>
+                <Link type='button' className="nav-link" onClick={() => props.setType(item.type) }> <i className={`fe fe-${item.icon} nav-icon`}></i>{item.title} </Link>
                
             </Nav.Item>
         )
@@ -114,5 +114,14 @@ export default React.memo(ProfileLayout);
 
 ProfileLayout.propTypes = {
     children: PropTypes.element.isRequired,
+    vetProfile: PropTypes.shape({
+        avatar: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+        id: PropTypes.number.isRequired,
+        verified: PropTypes.number.isRequired,
+    }),
+    setType: PropTypes.func.isRequired,
+    type: PropTypes.string.isRequired
    
 }

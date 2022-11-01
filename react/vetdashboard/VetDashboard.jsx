@@ -6,7 +6,7 @@ import VetDashboardMain from "./VetDashboardMain";
 import VetAppointments from "./VetAppointments";
 import VetInvoices from "./VetInvoices";
 import VetClients from "./VetClients";
-import vetProfilesService from '../../vetProfiles/vetProfilesService'
+import vetProfilesService from '../../vetprofile/vetProfilesService'
 import { toast } from "react-toastify";
 
 
@@ -15,12 +15,19 @@ function VetDashboard(props) {
 	_logger("VetDashboard props", props)
     const [componentType, setComponentType] = useState();
     const [vetProfile, setVetProfile] = useState(); 
+    const [paging] = useState(
+        {
+            pageIndex: 0,
+            pageSize: 10
+        }
+    );
+
 
     useEffect(() => {
         
         setComponentType('main')
         vetProfilesService
-                .getByUserId(props.currentUser.id)
+                .getByUserId(props.currentUser.id,paging.pageIndex,paging.pageSize)
                 .then(vetProfileSuccess)
                 .catch(vetProfileError)
 		
@@ -77,7 +84,7 @@ function VetDashboard(props) {
 
     return (<React.Fragment>
 
-        <ProfileLayout vetProfile={vetProfile} setType={setType}>
+        <ProfileLayout vetProfile={vetProfile} setType={setType} type= {componentType}>
             {renderer(componentType)}
            
 

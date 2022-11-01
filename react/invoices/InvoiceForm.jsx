@@ -45,12 +45,12 @@ function InvoiceForm() {
     
     const onSubmitClicked = e => {
         _logger("onSubmitClicked", e)
-        let swalHtml = `<div class='container-fluid'><p class="fw-bold">you have ${e.services.length} services</p>`
+        let swalHtml = `<div class='container-fluid'><p class="fw-bold">you have ${e.services.length} services</p><hr/> `
         for (let index = 0; index < e.services.length; index++) {
             const element = e.services[index];
             swalHtml += `<div class='row'>
-                        <div class='col m-0 text-start'><p>Service: ${element.name}</p></div>
-                        <div class= 'col m-0 text-start'> 'Price: $${element.price}</div> </div>`
+                        <div class='col m-0 ms-9 text-start'><p>Service: ${element.name}</p></div>
+                        <div class= 'col m-0 ms-5 text-start'>Price: $${element.price}</div> </div>`
         }
         swalHtml += '</div>'
         //  will add a service to insert invoice data to the table.  

@@ -50,45 +50,43 @@ function VetAppointments({ vetId }) {
         const number = parseInt(e.target.value, 10);
         _logger(number)
         const arrayOfTypes = [
-            { value : 0, type : 'all'},
+            { value: 0 },
             //day
-            { value :7 , type: 'day'},
+            { value: 7 },
             
             //month
-            { value: 2, type: 'month' },
-            {value: 6, type : 'month'}
+            { value: 2 },
+            { value: 6 }
         ]
         _logger("onClickAptFilter", e.target.value);
         const value = e.target.value
         setFilter(value);
         
-        if (number === 1) {
-
-            getByVetIdByUpcomingDay(vetId , arrayOfTypes[number].value)
+        switch (number) {
+            case 1:
+                getByVetIdByUpcomingDay(vetId , arrayOfTypes[number].value)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
-            
-        }
-        else if (number === 2)
-        {
-            
-            getByVetIdByMonth(vetId, arrayOfTypes[number].value)
+                break;
+            case 2:
+                   getByVetIdByMonth(vetId, arrayOfTypes[number].value)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
-            
-            
-        }
-        else if (number === 3)
-        {
-             getByVetIdByMonth(vetId, arrayOfTypes[number].value)
+                break;
+            case 3:
+                getByVetIdByMonth(vetId, arrayOfTypes[number].value)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
-            }
-        else if (number ===0)
-        {
-            getByVetId(vetId)
+                break;
+            case 4:
+                
+                break;
+        
+            default:
+                getByVetId(vetId)
                 .then(getByVetIdSuccess)
                 .catch(getByVetIdError)
+                break;
         }
         
     }

@@ -8,7 +8,7 @@ function VetInvoices() {
   
     return (
         <React.Fragment>
-            <Card className="border-0 mt-4">
+            <Card className="border-0">
                 <Card.Header>
                     <h3 className="mb-0 h4">Invoices</h3>
                 </Card.Header>

@@ -57,7 +57,7 @@ function VetClients({vetId}) {
     }
 
     return (
-            <Card className="border-0 mt-4">
+            <Card className="border-0">
                 <Card.Header>
                     <h3 className="mb-0 h4">Clients</h3>
                 </Card.Header>

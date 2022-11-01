@@ -27,17 +27,19 @@ function InvoiceFormFields(props) {
    
     const addServices = () => (
         <div className='form-group mb-3 card practice-form'>
-            <div className=" ms-9 my-7 card-header">
+            <div className=" m-3 card-header">
 
                 <div className="row">
-                    <div className="col-7">
+                    <div className="col-8">
 
                         <h1>{props.formTitle}</h1>
                     </div>
-                    <div className="col mb-3">
+                    
+                    <div className="col-4 mb-3">
                         <InvoiceTo client={props.client}></InvoiceTo>
 
                     </div>
+                    <hr className='col-12'/> 
                 </div>
 
                 <Formik
@@ -48,8 +50,9 @@ function InvoiceFormFields(props) {
                     {({ values }) => (
                         <Form>
                             <Row>
-                                <div className="col-7">Service Provided</div>
-                                <div className="col-2">Price</div>
+                                <div className="col-8">Service Provided</div>
+                                <div className="col-4">Price</div>
+                             
                             </Row>
                             <FieldArray name="services">
                                 {arrayHelpers => (
@@ -57,7 +60,7 @@ function InvoiceFormFields(props) {
                                         {values.services.length > 0 &&
                                             values.services.map((service, index) => (
                                                 <div className="row" key={index}>
-                                                    <div className="col-7 mb-3">
+                                                    <div className="col-8 mb-3">
                                                         <Field
                                                             name={`services.${index}.name`}
                                                             placeholder="Service Name"
@@ -87,7 +90,7 @@ function InvoiceFormFields(props) {
                                                         />
 
                                                     </div>
-                                                    <div className="col" >
+                                                    <div className="col-1" >
                                                         <button
                                                             type="button"
                                                             className="btn btn-warning mb-3 btn-sq-responsive "
